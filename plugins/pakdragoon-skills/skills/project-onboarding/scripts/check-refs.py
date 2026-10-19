@@ -1,7 +1,13 @@
 #!/usr/bin/env python3
 """check-refs.py: verify citations in a generated onboarding page.
 
-Usage: python3 check-refs.py <onboarding.html> [--root <repo-root>]
+Usage: python3 check-refs.py <onboarding.html> [--root <repo-or-workspace-root>]
+
+Single-repo mode: refs are repo-relative ("src/app.ts:12"), commits are "a1b2c3d".
+Workspace mode:   refs are workspace-relative ("BE/src/app.ts:12"), commits are
+                  "BE@a1b2c3d" (a bare hash is accepted if it exists in any child repo).
+If --root is omitted: the git top-level of the page's folder, else the parent of an
+".onboarding" folder, else the current directory.
 
 Checks every <code class="ref ...">...</code>:
   - file refs  "path", "path:12", "path:12-40"  -> file is tracked/exists, lines within file length
@@ -35,6 +41,24 @@ def git(root, *args):
     return subprocess.run(["git", "-C", root, *args], capture_output=True, text=True)
 
 
+def child_repos(root, depth=3):
+    found = []
+    base = root.rstrip(os.sep).count(os.sep)
+    for dp, dns, _ in os.walk(root):
+        if ".git" in dns or os.path.isfile(os.path.join(dp, ".git")):
+            if dp != root:
+                found.append(dp)
+                dns[:] = []
+                continue
+        dns[:] = [d for d in dns if d not in ("node_modules", "vendor", "dist", "build", ".git", ".venv")
+                  and dp.count(os.sep) - base < depth]
+    return found
+
+
+def commit_exists(repo, h):
+    return git(repo, "cat-file", "-e", f"{h}^{{commit}}").returncode == 0
+
+
 def main():
     args = sys.argv[1:]
     if not args:
@@ -45,8 +69,17 @@ def main():
     if "--root" in args:
         root = args[args.index("--root") + 1]
     if root is None:
-        r = git(os.path.dirname(os.path.abspath(page)), "rev-parse", "--show-toplevel")
-        root = r.stdout.strip() or os.getcwd()
+        page_dir = os.path.dirname(os.path.abspath(page))
+        r = git(page_dir, "rev-parse", "--show-toplevel")
+        if r.returncode == 0 and r.stdout.strip():
+            root = r.stdout.strip()
+        elif os.path.basename(page_dir) == ".onboarding":
+            root = os.path.dirname(page_dir)
+        else:
+            root = os.getcwd()
+    root = os.path.abspath(root)
+    root_is_repo = git(root, "rev-parse", "--git-dir").returncode == 0
+    children = [] if root_is_repo else child_repos(root)
 
     text = open(page, encoding="utf-8").read()
     problems = []
@@ -60,7 +93,12 @@ def main():
             continue
         checked += 1
         if "commit" in classes:
-            if git(root, "cat-file", "-e", f"{ref}^{{commit}}").returncode != 0:
+            if "@" in ref:
+                repo_rel, h = ref.split("@", 1)
+                ok = commit_exists(os.path.join(root, repo_rel), h)
+            else:
+                ok = any(commit_exists(r, ref) for r in ([root] if root_is_repo else children))
+            if not ok:
                 problems.append(f"commit not found: {ref}")
             continue
         m = FILE_RE.match(ref)
@@ -97,7 +135,8 @@ def main():
                 continue
             problems.append(f"possible {label}: {hit[:60]}")
 
-    print(f"Checked {checked} references in {page} (repo root: {root})")
+    mode = "repo" if root_is_repo else f"workspace, {len(children)} repos"
+    print(f"Checked {checked} references in {page} (root: {root}, {mode})")
     if problems:
         print(f"{len(problems)} problem(s):")
         for p in problems:

@@ -117,6 +117,8 @@ footer { margin-top: 64px; color: var(--ink-2); font-size: 13px; }
   <div class="sub">Onboarding guide</div>
   <ol>
     <li><a href="#tldr">TL;DR</a></li>
+    <!-- WORKSPACE-ONLY: delete this TOC entry in single-repo mode -->
+    <li><a href="#system">System overview</a></li>
     <li><a href="#start">Run it locally</a></li>
     <li><a href="#architecture">Architecture</a></li>
     <li><a href="#flows">Core flows</a></li>
@@ -164,6 +166,35 @@ footer { margin-top: 64px; color: var(--ink-2); font-size: 13px; }
       <!-- FILL: 4–6 bullets: what it does, for whom, stack, size/age, current state, the one thing to be careful about -->
     </ul>
   </div>
+</section>
+
+<!-- WORKSPACE-ONLY: delete this whole section in single-repo mode -->
+<section id="system">
+  <h2>System overview</h2>
+  <p class="intro"><!-- FILL: how the repos fit together in two or three sentences --></p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Repo</th><th>Role</th><th>Stack</th><th>Ask</th></tr></thead>
+    <tbody>
+      <!-- FILL: one row per repo -->
+    </tbody>
+  </table></div>
+  <div class="diagram">
+    <pre class="mermaid">
+<!-- FILL: mermaid flowchart: repos as subgraphs, integration points (API, DB, queues, webhooks, auth) as edges -->
+    </pre>
+  </div>
+  <h3>How the frontend reaches the backend</h3>
+  <ul class="findings">
+    <!-- FILL: base URL env var names, proxy/rewrites, auth token storage and attachment, CORS, deploy coupling; tier + refs on each -->
+  </ul>
+  <h3>API contract</h3>
+  <p><!-- FILL: one line summary, e.g. "38 of 45 backend routes are called by the frontend; 2 frontend calls hit no route." --></p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Mismatch</th><th>Method &amp; path</th><th>Where</th><th>Likely reason</th></tr></thead>
+    <tbody>
+      <!-- FILL: verified mismatches only (FE call without route, route without caller, shape mismatch), each with tier badge in "Likely reason" -->
+    </tbody>
+  </table></div>
 </section>
 
 <section id="start">

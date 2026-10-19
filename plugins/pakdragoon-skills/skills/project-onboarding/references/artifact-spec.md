@@ -20,6 +20,7 @@ with the most useful sentence. No marketing language, no "robust", no
 |---|---|---|---|
 | 0 | header | Title block | Project name, repo, branch, commit hash (short), generated date, scope, sources used (checkboxes: code, git history, N CLAUDE.md files, docs, tests, material), tier counts |
 | 1 | tldr | TL;DR | 4–6 bullets: what it does, for whom, stack, how big/old, current state (active/maintenance), the one thing to be careful about |
+| 1b | system | System overview | **Workspace mode only** (delete the section and its TOC link otherwise). Repo table (path, role, stack, owners), Mermaid flowchart of repos and integration points, how FE reaches BE (base URL env names, proxy, auth), API contract summary: matched count, table of FE-calls-without-route and routes-without-caller after verification |
 | 2 | start | Run it locally | Prereqs, ordered commands, env var **names** with one-line purpose (never values), seed/test data, how to run tests. Mark steps you couldn't verify as Inferred |
 | 3 | architecture | Architecture | Mermaid `flowchart` of components and external services; table: component, path, responsibility, owners |
 | 4 | flows | Core flows | 3–5 flows. Each: one-paragraph story, Mermaid `sequenceDiagram`, numbered hops with file:line and tier per hop |
@@ -32,6 +33,25 @@ with the most useful sentence. No marketing language, no "robust", no
 | 11 | questions | Open questions | Grouped by module. Table: #, question, refs, current assumption, ask. A "Copy as Markdown" button is wired in the template |
 | 12 | glossary | Glossary | Domain terms → meaning → where defined |
 | 13 | method | How this was made | What was read, what wasn't (generated code, vendored deps), shallow-clone caveat, previous-run delta, tier rules summary |
+
+## Workspace mode differences
+
+- **Header:** the Repository cell lists every repo with its short hash
+  (`FE <code>1abcad2</code>, BE <code>0f61c03</code>`); Commit cell becomes
+  "see repos"; sources list counts per repo.
+- **TL;DR:** describe the system first, then one bullet per repo.
+- **Run it locally, Build & deploy, History:** one `<h3>` per repo, plus a
+  first `<h3>Together</h3>` for running the full stack (start order, ports,
+  which env var points FE at BE).
+- **Architecture:** the system diagram goes in System overview; Architecture
+  holds one diagram per repo (or the most important one if space is tight).
+- **Module cards:** prefix the card title with the repo (`BE · Billing`) and
+  give ids like `mod-be-billing`.
+- **Core flows:** cross-repo sequence diagrams with `box` groups per repo.
+- **Open questions:** `data-module` is `"<repo> · <module>"`; contract
+  questions use `"Contract"`.
+- **Citations:** workspace-relative paths (`BE/src/...`), commits as
+  `<code class="ref commit">BE@a1b2c3d</code>`.
 
 ## HTML patterns
 

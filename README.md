@@ -43,6 +43,24 @@ Run it from the root of the repository you want to understand:
 /pakdragoon-skills:project-onboarding order checkout flow --out docs/onboarding
 ```
 
+### Single repo or a whole workspace
+
+- **Inside a repo** (root or any subfolder): documents that repo. From a
+  subfolder, it offers that subfolder as the scope.
+- **In a parent folder that isn't a repo** but holds several, like
+  `Relay/` with `FE/` and `BE/` inside: it finds the repos, asks which to
+  include, documents each, then connects them. You get a System overview,
+  core flows traced from the UI through the API into the database, and an
+  API contract check that lists frontend calls with no backend route and
+  backend routes nothing calls.
+
+```bash
+cd Relay
+/pakdragoon-skills:project-onboarding                # whole system
+/pakdragoon-skills:project-onboarding BE billing     # one module in one repo
+/pakdragoon-skills:project-onboarding deals flow     # one flow, across repos
+```
+
 ### What it reads
 
 - **Code**: entry points, modules, schema and migrations, config, CI/CD, IaC
@@ -89,14 +107,15 @@ has filters to show or hide each tier.
 
 ### How it works
 
-1. **Preflight**: checks the repo, records the commit, warns about shallow clones
+1. **Preflight**: `scripts/find-repos.sh` picks single-repo or workspace mode, records commits, warns about shallow clones
 2. **Inventory**: `scripts/repo-inventory.sh` maps languages, layout, manifests, docs, tests, migrations, CI, IaC, env var names
 3. **Git history**: `scripts/git-insights.sh` mines hotspots, incidents, eras and ownership
 4. **Stated knowledge**: CLAUDE.md files, docs and your material, logged as claims to verify
-5. **Architecture and modules**: one subagent per module on larger repos
-6. **Core flows and data model**: traced hop by hop with citations
-7. **Reconcile**: verify claims, classify findings, build open questions
-8. **Build and verify**: fills the HTML template, then `scripts/check-refs.py` checks every citation resolves and scans for secrets
+5. **API contract** (workspace mode): `scripts/api-contract.py` matches frontend calls to backend routes
+6. **Architecture and modules**: one subagent per module on larger repos
+7. **Core flows and data model**: traced hop by hop with citations
+8. **Reconcile**: verify claims, classify findings, build open questions
+9. **Build and verify**: fills the HTML template, then `scripts/check-refs.py` checks every citation resolves and scans for secrets
 
 ### Tips
 
@@ -115,8 +134,10 @@ plugins/pakdragoon-skills/
 ├── .claude-plugin/plugin.json           plugin manifest
 └── skills/project-onboarding/
     ├── SKILL.md                         workflow
-    ├── references/                      confidence rules, git mining, exploration, artifact spec
-    ├── scripts/                         repo-inventory.sh, git-insights.sh, check-refs.py
+    ├── references/                      confidence rules, git mining, exploration,
+    │                                    workspace mode, artifact spec
+    ├── scripts/                         find-repos.sh, repo-inventory.sh, git-insights.sh,
+    │                                    api-contract.py, check-refs.py
     └── templates/onboarding.html        output page template
 ```
 
