@@ -1,0 +1,13 @@
+{
+  "name": "pakdragoon-skills",
+  "version": "0.1.0",
+  "description": "Engineering skills by Hassan Ali (PakDragoon). Includes project-onboarding: turn an unfamiliar codebase into a visual, evidence-backed onboarding guide.",
+  "author": {
+    "name": "Hassan Ali",
+    "url": "https://github.com/PakDragoon"
+  },
+  "homepage": "https://github.com/PakDragoon/skills",
+  "repository": "https://github.com/PakDragoon/skills",
+  "license": "MIT",
+  "keywords": ["onboarding", "documentation", "codebase", "git-history", "handover"]
+}

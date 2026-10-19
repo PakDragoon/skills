@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title><!-- FILL: Project name --> Onboarding</title>
+<style>
+:root {
+  --bg: #fbfaf7; --surface: #ffffff; --surface-2: #f3f1ec; --ink: #1d1d1b; --ink-2: #55534e;
+  --line: #e2dfd8; --accent: #2f5d8a; --accent-ink: #ffffff;
+  --ok: #1f7a4d; --ok-bg: #e3f3ea; --mid: #8a5a00; --mid-bg: #fbefd6; --ask: #a3322a; --ask-bg: #fbe4e1;
+  --code-bg: #f1eee7; --shadow: 0 1px 2px rgba(0,0,0,.05), 0 4px 16px rgba(0,0,0,.04);
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #141517; --surface: #1b1d20; --surface-2: #23262a; --ink: #e9e7e2; --ink-2: #a5a29b;
+    --line: #2f3236; --accent: #7fb0e0; --accent-ink: #10161c;
+    --ok: #6fd3a0; --ok-bg: #173226; --mid: #f0c060; --mid-bg: #352a12; --ask: #f28b82; --ask-bg: #3a1d1b;
+    --code-bg: #24272b; --shadow: none;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #141517; --surface: #1b1d20; --surface-2: #23262a; --ink: #e9e7e2; --ink-2: #a5a29b;
+  --line: #2f3236; --accent: #7fb0e0; --accent-ink: #10161c;
+  --ok: #6fd3a0; --ok-bg: #173226; --mid: #f0c060; --mid-bg: #352a12; --ask: #f28b82; --ask-bg: #3a1d1b;
+  --code-bg: #24272b; --shadow: none;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 16px; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.6 var(--sans); }
+a { color: var(--accent); }
+code, pre { font-family: var(--mono); font-size: .86em; }
+code { background: var(--code-bg); padding: .1em .35em; border-radius: 4px; word-break: break-word; }
+.layout { display: grid; grid-template-columns: 250px minmax(0, 1fr); max-width: 1280px; margin: 0 auto; }
+nav.toc { position: sticky; top: 0; align-self: start; height: 100vh; overflow-y: auto; padding: 28px 18px; border-right: 1px solid var(--line); }
+nav.toc .brand { font-weight: 700; letter-spacing: -.01em; margin-bottom: 4px; }
+nav.toc .sub { color: var(--ink-2); font-size: 13px; margin-bottom: 20px; }
+nav.toc ol { list-style: none; margin: 0; padding: 0; counter-reset: toc; }
+nav.toc li a { display: block; padding: 5px 10px; border-radius: 6px; color: var(--ink-2); text-decoration: none; font-size: 14px; }
+nav.toc li a:hover, nav.toc li a.active { background: var(--surface-2); color: var(--ink); }
+main { padding: 36px 48px 80px; min-width: 0; }
+header.hero h1 { font-size: 34px; line-height: 1.15; letter-spacing: -.02em; margin: 0 0 6px; }
+header.hero .lede { color: var(--ink-2); margin: 0 0 22px; max-width: 70ch; }
+.meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; margin-bottom: 18px; }
+.meta-grid div { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+.meta-grid dt { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-2); }
+.meta-grid dd { margin: 2px 0 0; font-weight: 600; word-break: break-word; }
+.sources { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 14px; padding: 0; list-style: none; }
+.sources li { font-size: 13px; padding: 3px 10px; border-radius: 999px; background: var(--surface-2); color: var(--ink-2); }
+.sources li.used::before { content: "✓ "; color: var(--ok); }
+.sources li.missing::before { content: "– "; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 4px 0 8px; }
+.filters span.label { font-size: 13px; color: var(--ink-2); margin-right: 4px; }
+.filters button { font: inherit; font-size: 13px; cursor: pointer; border: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: 4px 12px; border-radius: 999px; }
+.filters button[aria-pressed="false"] { opacity: .45; text-decoration: line-through; }
+section { margin-top: 56px; }
+section > h2 { font-size: 24px; letter-spacing: -.01em; margin: 0 0 4px; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+section > .intro { color: var(--ink-2); margin-top: 10px; }
+h3 { font-size: 18px; margin: 28px 0 8px; }
+h4 { font-size: 14px; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-2); margin: 18px 0 6px; }
+.tier { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; padding: 2px 7px; border-radius: 5px; margin-right: 6px; vertical-align: 1px; white-space: nowrap; }
+.tier-confirmed { color: var(--ok); background: var(--ok-bg); }
+.tier-inferred { color: var(--mid); background: var(--mid-bg); }
+.tier-question { color: var(--ask); background: var(--ask-bg); }
+code.ref { background: transparent; border: 1px solid var(--line); color: var(--ink-2); font-size: .8em; }
+code.ref.commit { border-style: dashed; }
+ul.findings, ol.hops { padding-left: 1.2em; }
+ul.findings li, ol.hops li { margin: 6px 0; }
+body.hide-confirmed li:has(> .tier-confirmed), body.hide-inferred li:has(> .tier-inferred), body.hide-question li:has(> .tier-question) { display: none; }
+.tldr { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 10px; padding: 14px 20px; box-shadow: var(--shadow); }
+.tldr ul { margin: 0; padding-left: 1.1em; }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; box-shadow: var(--shadow); min-width: 0; }
+.card h3 { margin-top: 0; }
+.card .path { font-family: var(--mono); font-size: 12px; font-weight: 400; color: var(--ink-2); margin-left: 6px; }
+.card .purpose { margin-top: 0; }
+dl.meta { display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; font-size: 14px; margin: 8px 0; }
+dl.meta dt { color: var(--ink-2); }
+dl.meta dd { margin: 0; }
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; vertical-align: top; padding: 8px 12px; border-bottom: 1px solid var(--line); }
+th { background: var(--surface-2); font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-2); }
+tr:last-child td { border-bottom: 0; }
+.diagram { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 14px 0; }
+pre.mermaid { margin: 0; background: transparent; text-align: center; }
+.flow { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 4px 20px 14px; margin: 18px 0; box-shadow: var(--shadow); }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--ink-2); }
+.legend .line { display: inline-block; width: 26px; border-top: 2px solid var(--ink-2); vertical-align: middle; margin-right: 6px; }
+.legend .line.dash { border-top-style: dashed; }
+.steps { counter-reset: s; list-style: none; padding: 0; }
+.steps > li { counter-increment: s; position: relative; padding-left: 38px; margin: 12px 0; }
+.steps > li::before { content: counter(s); position: absolute; left: 0; top: 0; width: 26px; height: 26px; border-radius: 50%; background: var(--accent); color: var(--accent-ink); font-size: 13px; font-weight: 700; display: grid; place-items: center; }
+pre.cmd { background: var(--code-bg); padding: 10px 14px; border-radius: 8px; overflow-x: auto; margin: 6px 0; }
+.btn { font: inherit; font-size: 14px; cursor: pointer; border: 0; background: var(--accent); color: var(--accent-ink); padding: 7px 14px; border-radius: 8px; }
+.toolbar { display: flex; gap: 10px; align-items: center; margin: 10px 0 14px; flex-wrap: wrap; }
+.toolbar .note { color: var(--ink-2); font-size: 13px; }
+.theme-toggle { margin-top: 18px; font-size: 13px; }
+footer { margin-top: 64px; color: var(--ink-2); font-size: 13px; }
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; }
+  nav.toc { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--line); padding: 16px; }
+  nav.toc ol { display: flex; flex-wrap: wrap; gap: 4px; }
+  main { padding: 24px 16px 60px; }
+  header.hero h1 { font-size: 27px; }
+  .cards { grid-template-columns: 1fr; }
+}
+@media print { nav.toc, .filters, .toolbar button, .theme-toggle { display: none; } .layout { display: block; } }
+</style>
+</head>
+<body>
+<div class="layout">
+<nav class="toc" aria-label="Contents">
+  <div class="brand"><!-- FILL: Project name --></div>
+  <div class="sub">Onboarding guide</div>
+  <ol>
+    <li><a href="#tldr">TL;DR</a></li>
+    <li><a href="#start">Run it locally</a></li>
+    <li><a href="#architecture">Architecture</a></li>
+    <li><a href="#flows">Core flows</a></li>
+    <li><a href="#data">Data model</a></li>
+    <li><a href="#modules">Module guide</a></li>
+    <li><a href="#infra">Build &amp; deploy</a></li>
+    <li><a href="#history">History &amp; hotspots</a></li>
+    <li><a href="#gotchas">Gotchas &amp; risks</a></li>
+    <li><a href="#drift">Doc drift</a></li>
+    <li><a href="#questions">Open questions</a></li>
+    <li><a href="#glossary">Glossary</a></li>
+    <li><a href="#method">How this was made</a></li>
+  </ol>
+  <button class="btn theme-toggle" type="button" id="themeToggle">Toggle theme</button>
+</nav>
+
+<main>
+<header class="hero" id="header">
+  <h1><!-- FILL: Project name --></h1>
+  <p class="lede"><!-- FILL: one sentence: what this project is and who it serves --></p>
+  <dl class="meta-grid">
+    <div><dt>Repository</dt><dd><!-- FILL: owner/repo or path --></dd></div>
+    <div><dt>Commit</dt><dd><code><!-- FILL: short hash --></code> on <!-- FILL: branch --></dd></div>
+    <div><dt>Generated</dt><dd><!-- FILL: YYYY-MM-DD --></dd></div>
+    <div><dt>Scope</dt><dd><!-- FILL: Whole project | module name --></dd></div>
+  </dl>
+  <ul class="sources" aria-label="Sources used">
+    <!-- FILL: one <li class="used|missing"> per source, e.g.
+    <li class="used">Code (1,240 files)</li><li class="used">Git history (3,812 commits)</li>
+    <li class="used">3 CLAUDE.md files</li><li class="used">docs/ (14 files)</li>
+    <li class="used">Tests</li><li class="missing">Handover material</li> -->
+  </ul>
+  <div class="filters" role="group" aria-label="Filter findings by confidence">
+    <span class="label">Show:</span>
+    <button type="button" data-tier="confirmed" aria-pressed="true"><span class="tier tier-confirmed">Confirmed</span><!-- FILL: count --></button>
+    <button type="button" data-tier="inferred" aria-pressed="true"><span class="tier tier-inferred">Inferred</span><!-- FILL: count --></button>
+    <button type="button" data-tier="question" aria-pressed="true"><span class="tier tier-question">Open question</span><!-- FILL: count --></button>
+  </div>
+</header>
+
+<section id="tldr">
+  <h2>TL;DR</h2>
+  <div class="tldr">
+    <ul>
+      <!-- FILL: 4–6 bullets: what it does, for whom, stack, size/age, current state, the one thing to be careful about -->
+    </ul>
+  </div>
+</section>
+
+<section id="start">
+  <h2>Run it locally</h2>
+  <p class="intro"><!-- FILL: one line on prerequisites (runtime versions, DB, services) --></p>
+  <ol class="steps">
+    <!-- FILL: ordered steps, each <li> with a short sentence and a <pre class="cmd"> block; tier badge on steps you couldn't verify -->
+  </ol>
+  <h3>Environment variables</h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Name</th><th>Purpose</th><th>Where used</th></tr></thead>
+    <tbody>
+      <!-- FILL: one row per env var NAME (never values) -->
+    </tbody>
+  </table></div>
+  <h3>Tests</h3>
+  <!-- FILL: how to run tests, what they cover, known gaps -->
+</section>
+
+<section id="architecture">
+  <h2>Architecture</h2>
+  <p class="intro"><!-- FILL: two or three sentences describing the shape of the system --></p>
+  <div class="diagram">
+    <pre class="mermaid">
+<!-- FILL: mermaid flowchart of components and external services -->
+    </pre>
+  </div>
+  <div class="legend"><span><span class="line"></span>Confirmed</span><span><span class="line dash"></span>Inferred</span><span><span class="tier tier-question">?</span>Open question node</span></div>
+  <h3>Components</h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Component</th><th>Path</th><th>Responsibility</th><th>Ask</th></tr></thead>
+    <tbody>
+      <!-- FILL: one row per component -->
+    </tbody>
+  </table></div>
+</section>
+
+<section id="flows">
+  <h2>Core flows</h2>
+  <p class="intro"><!-- FILL: why these flows were chosen (business centrality, churn, docs emphasis) --></p>
+  <!-- FILL: one block per flow:
+  <article class="flow" id="flow-checkout">
+    <h3>Checkout</h3>
+    <p>Story paragraph.</p>
+    <div class="diagram"><pre class="mermaid">sequenceDiagram ...</pre></div>
+    <ol class="hops"><li><span class="tier tier-confirmed">Confirmed</span> ... <code class="ref">path:line</code></li></ol>
+  </article> -->
+</section>
+
+<section id="data">
+  <h2>Data model</h2>
+  <p class="intro"><!-- FILL: where the schema lives and how it is managed (ORM, migrations) --></p>
+  <div class="diagram">
+    <pre class="mermaid">
+<!-- FILL: mermaid erDiagram of key entities -->
+    </pre>
+  </div>
+  <h3>Key entities and states</h3>
+  <ul class="findings">
+    <!-- FILL: important fields, status enums, invariants, with tiers and refs -->
+  </ul>
+  <h3>How the schema evolved</h3>
+  <!-- FILL: migration history highlights -->
+</section>
+
+<section id="modules">
+  <h2>Module guide</h2>
+  <div class="cards">
+    <!-- FILL: one <article class="card"> per module (see artifact-spec.md) -->
+  </div>
+</section>
+
+<section id="infra">
+  <h2>Build &amp; deploy</h2>
+  <!-- FILL: CI steps, environments, deploy mechanism, IaC, scheduled jobs, external services; findings with tiers -->
+</section>
+
+<section id="history">
+  <h2>History &amp; hotspots</h2>
+  <h3>Eras</h3>
+  <!-- FILL: timeline of eras with dates and what changed -->
+  <h3>Hotspots</h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th>File</th><th>Commits</th><th>Fix commits</th><th>Why it churns</th></tr></thead>
+    <tbody>
+      <!-- FILL: top hotspot rows -->
+    </tbody>
+  </table></div>
+  <h3>Incidents, reverts and abandoned approaches</h3>
+  <!-- FILL: notable ones with commit refs -->
+  <h3>Who knows what</h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Area</th><th>Current (last 12 months)</th><th>Historical</th></tr></thead>
+    <tbody>
+      <!-- FILL: rows per area, names only -->
+    </tbody>
+  </table></div>
+</section>
+
+<section id="gotchas">
+  <h2>Gotchas &amp; risk areas</h2>
+  <ol class="hops">
+    <!-- FILL: ranked list: what, where, why it matters, tier badge first -->
+  </ol>
+</section>
+
+<section id="drift">
+  <h2>Doc drift</h2>
+  <p class="intro">Places where written documentation or comments disagree with what the code does today.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Source</th><th>Says</th><th>Code does</th></tr></thead>
+    <tbody>
+      <!-- FILL: one row per mismatch, or a single row saying none were found -->
+    </tbody>
+  </table></div>
+</section>
+
+<section id="questions">
+  <h2>Open questions</h2>
+  <p class="intro">Things the code and history couldn't settle. Each has the assumption this guide makes until someone answers, and who is most likely to know.</p>
+  <div class="toolbar">
+    <button class="btn" type="button" id="copyQuestions">Copy as Markdown</button>
+    <span class="note" id="copyStatus"></span>
+  </div>
+  <div class="table-wrap"><table id="questionsTable">
+    <thead><tr><th>#</th><th>Question</th><th>Evidence</th><th>Current assumption</th><th>Ask</th></tr></thead>
+    <tbody>
+      <!-- FILL: rows grouped by module; keep data-module, data-q, data-refs, data-assume, data-ask attributes -->
+    </tbody>
+  </table></div>
+</section>
+
+<section id="glossary">
+  <h2>Glossary</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Term</th><th>Meaning</th><th>Defined in</th></tr></thead>
+    <tbody>
+      <!-- FILL: domain terms -->
+    </tbody>
+  </table></div>
+</section>
+
+<section id="method">
+  <h2>How this was made</h2>
+  <!-- FILL: what was read and skipped, history depth / shallow caveat, delta from previous run, tier rules in two lines -->
+</section>
+
+<footer>
+  Generated with the <code>project-onboarding</code> skill from <a href="https://github.com/PakDragoon/skills">PakDragoon/skills</a>.
+  Confirmed = code plus an independent source agree. Inferred = single source or unclear intent. Open question = contradiction, oddity or missing piece.
+</footer>
+</main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>
+(function () {
+  var root = document.documentElement;
+  function isDark() {
+    var t = root.getAttribute('data-theme');
+    if (t) return t === 'dark';
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+  try { var saved = localStorage.getItem('onboarding-theme'); if (saved) root.setAttribute('data-theme', saved); } catch (e) {}
+
+  // Keep the original diagram sources so a theme switch can re-render them.
+  var diagrams = Array.prototype.slice.call(document.querySelectorAll('pre.mermaid'));
+  diagrams.forEach(function (el) { el.setAttribute('data-src', el.textContent); });
+  function renderDiagrams() {
+    if (!window.mermaid) return;
+    diagrams.forEach(function (el) { el.removeAttribute('data-processed'); el.innerHTML = ''; el.textContent = el.getAttribute('data-src'); });
+    mermaid.initialize({ startOnLoad: false, securityLevel: 'strict', theme: isDark() ? 'dark' : 'neutral',
+      flowchart: { htmlLabels: true, curve: 'basis' }, er: { useMaxWidth: true }, sequence: { useMaxWidth: true } });
+    mermaid.run({ nodes: diagrams.filter(function (el) { return el.textContent.trim(); }) }).catch(function () {});
+  }
+  renderDiagrams();
+
+  document.getElementById('themeToggle').addEventListener('click', function () {
+    var next = isDark() ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('onboarding-theme', next); } catch (e) {}
+    renderDiagrams();
+  });
+
+  // Tier filters.
+  document.querySelectorAll('.filters button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var on = b.getAttribute('aria-pressed') !== 'true';
+      b.setAttribute('aria-pressed', String(on));
+      document.body.classList.toggle('hide-' + b.getAttribute('data-tier'), !on);
+    });
+  });
+
+  // Highlight current section in the TOC.
+  var links = {};
+  document.querySelectorAll('nav.toc a').forEach(function (a) { links[a.getAttribute('href').slice(1)] = a; });
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting && links[en.target.id]) {
+          Object.keys(links).forEach(function (k) { links[k].classList.remove('active'); });
+          links[en.target.id].classList.add('active');
+        }
+      });
+    }, { rootMargin: '0px 0px -70% 0px' });
+    document.querySelectorAll('main section').forEach(function (s) { io.observe(s); });
+  }
+
+  // Copy open questions as Markdown, grouped by module.
+  document.getElementById('copyQuestions').addEventListener('click', function () {
+    var rows = document.querySelectorAll('#questionsTable tbody tr[data-q]');
+    var groups = {}, order = [];
+    rows.forEach(function (r) {
+      var m = r.getAttribute('data-module') || 'General';
+      if (!groups[m]) { groups[m] = []; order.push(m); }
+      groups[m].push(r);
+    });
+    var title = (document.querySelector('header.hero h1') || {}).textContent || 'Project';
+    var md = '# Open questions: ' + title.trim() + '\n';
+    var n = 0;
+    order.forEach(function (m) {
+      md += '\n## ' + m + '\n\n';
+      groups[m].forEach(function (r) {
+        n += 1;
+        md += n + '. ' + r.getAttribute('data-q') + '\n';
+        if (r.getAttribute('data-refs')) md += '   - Evidence: ' + r.getAttribute('data-refs') + '\n';
+        if (r.getAttribute('data-assume')) md += '   - Current assumption: ' + r.getAttribute('data-assume') + '\n';
+        if (r.getAttribute('data-ask')) md += '   - Ask: ' + r.getAttribute('data-ask') + '\n';
+      });
+    });
+    var status = document.getElementById('copyStatus');
+    function done(ok) { status.textContent = ok ? 'Copied ' + n + ' questions.' : 'Copy failed: select the table manually.'; }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(md).then(function () { done(true); }, function () { done(false); });
+    } else {
+      var ta = document.createElement('textarea'); ta.value = md; document.body.appendChild(ta); ta.select();
+      try { done(document.execCommand('copy')); } catch (e) { done(false); }
+      document.body.removeChild(ta);
+    }
+  });
+})();
+</script>
+</body>
+</html>

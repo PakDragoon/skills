@@ -1,0 +1,15 @@
+{
+  "name": "pakdragoon",
+  "description": "Claude Code skills by Hassan Ali (PakDragoon) for real-world engineering work.",
+  "owner": {
+    "name": "Hassan Ali",
+    "url": "https://github.com/PakDragoon"
+  },
+  "plugins": [
+    {
+      "name": "pakdragoon-skills",
+      "source": "./plugins/pakdragoon-skills",
+      "description": "Engineering skills: project onboarding from code and git history, and more to come."
+    }
+  ]
+}

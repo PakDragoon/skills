@@ -1,0 +1,4 @@
+.DS_Store
+.onboarding/
+__pycache__/
+*.pyc
